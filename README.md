@@ -45,6 +45,6 @@ segments := hedi.Segments{{
   Elements: hedi.Elements{{ Value: "850" }, { Value: "000000010" }},
 }}
 
-fmt.Println(segments.String())
+fmt.Println(segments)
 // ST*850*000000010~
 ```
