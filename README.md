@@ -17,10 +17,6 @@ tokens, err := lexer.Tokens()
 if err != nil {
   // ...
 }
-
-for _, token := range tokens {
-  // ...
-}
 ```
 ### Parsing
 ```go
@@ -29,10 +25,6 @@ reader := strings.NewReader(msg)
 parser := hedi.NewParser(reader)
 segments, err := parser.Segments()
 if err != nil {
-  // ...
-}
-
-for _, segment := range segments {
   // ...
 }
 ```
@@ -67,17 +59,16 @@ Hedi's `Segments` EDI type implements the WriterTo interface for efficient strin
 
 To override the default delimiters, you can use `DWriteTo(d hedi.Delimiters, w io.Writer) (int64, error)`, which `WriteTo(w io.Writer) (int64, error)` depends on under the hood.
 ```go
-segments := hedi.Segments{{
-  ID: "ST",
-  Elements: hedi.Elements{{ Value: "850" }, { Value: "000000010" }},
-}}
-
-
 file, _ := os.Create("850.txt")
 if err != nil {
   // ...
 }
 defer file.Close()
+
+segments := hedi.Segments{{
+  ID: "ST",
+  Elements: hedi.Elements{{ Value: "850" }, { Value: "000000010" }},
+}}
 
 _, err = segments.WriteTo(file)
 if err != nil {
