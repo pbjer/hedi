@@ -9,22 +9,13 @@ import (
 
 type Segments []Segment
 
+// String satisfied the fmt.Stringer interface. Depends on DString under
+// the hood.
 func (s *Segments) String() string {
 	return s.DString(DefaultDelimiters)
 }
 
-// DString returns a delimited string of the segments.
-// Specific delimiters can be optionally defined, where the first
-// provided delimiter will be used as a segment terminator, the
-// second as the element delimiter, and the third as the sub
-// element delimiter. Additional provided delimiters are ignored.
-// Delimiters default to '~' (segment), '*' (element), '>' (sub element).
-//
-// Example usage:
-//
-//	 segments := Segments{{ ID: "ST", Elements: Elements{{ Value: "850" }, { Value: "0001" }}
-//		fmt.Print(segments.DString('|'))
-//		Output: ST|850|0001~
+// DString returns a string of the segments formatted using the provided delimiters.
 func (s *Segments) DString(delimiters Delimiters) string {
 	var sb strings.Builder
 	for _, segment := range *s {
@@ -33,10 +24,14 @@ func (s *Segments) DString(delimiters Delimiters) string {
 	return sb.String()
 }
 
+// WriteTo satisfies the io.WriterTo interface. Depends on DWriteTo under
+// the hood.
 func (s *Segments) WriteTo(w io.Writer) (int64, error) {
 	return s.DWriteTo(DefaultDelimiters, w)
 }
 
+// DWriteTo uses a buffered writer to write Segments to w, formatted using the
+// provided delimiters.
 func (s *Segments) DWriteTo(d Delimiters, w io.Writer) (int64, error) {
 	var total int64
 	bufferedWriter := bufio.NewWriter(w)
@@ -79,13 +74,12 @@ func (s *Segments) DWriteTo(d Delimiters, w io.Writer) (int64, error) {
 	return total, nil
 }
 
-func (s *Segments) Last() *Segment {
+// Last returns a pointer to the last segment in the list.
+// The second return value will be true if an Element is
+// found, otherwise false.
+func (s *Segments) Last() (*Segment, bool) {
 	if len(*s) == 0 {
-		return &(*s)[0]
+		return nil, false
 	}
-	return &(*s)[len(*s)-1]
-}
-
-func (s *Segments) Add(segments ...Segment) {
-	*s = append(*s, segments...)
+	return &(*s)[len(*s)-1], true
 }

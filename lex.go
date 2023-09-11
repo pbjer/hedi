@@ -33,10 +33,6 @@ func (l *Lexer) Tokens() ([]Token, error) {
 	return append(isaTokens, lexSegments(l.reader, separators)...), nil
 }
 
-// lexISA returns a slice of tokens and the defined separators
-// for the given input. It expects input of at least 106 bytes,
-// or it will error. It does not otherwise validate the ISA or
-// the returned tokens.
 func lexISA(reader io.Reader) ([]Token, Delimiters, error) {
 	isaBuffer := make([]byte, 106)
 	n, err := reader.Read(isaBuffer)
@@ -83,8 +79,6 @@ func lexISA(reader io.Reader) ([]Token, Delimiters, error) {
 	return tokens, *separators, nil
 }
 
-// lexSegments returns a slice of tokens based on the supplied
-// separators.
 func lexSegments(reader io.Reader, separators Delimiters) []Token {
 	var tokens []Token
 

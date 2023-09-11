@@ -9,10 +9,12 @@ type Element struct {
 	SubElements []string
 }
 
+// DString returns a string of the element.
 func (e *Element) String() string {
 	return e.DString(DefaultDelimiters)
 }
 
+// DString returns a string of the element with the provided delimiters.
 func (e *Element) DString(delimiters Delimiters) string {
 	var sb strings.Builder
 
@@ -26,6 +28,7 @@ func (e *Element) DString(delimiters Delimiters) string {
 	return sb.String()
 }
 
+// AddSubElement adds a sub-element at the end of the current segment.
 func (e *Element) AddSubElement(value string) {
 	if e.SubElements == nil {
 		e.SubElements = []string{}
@@ -35,9 +38,10 @@ func (e *Element) AddSubElement(value string) {
 
 type Elements []Element
 
-func (ee *Elements) Last() *Element {
+// Last returns the last element in an element list.
+func (ee *Elements) Last() (*Element, bool) {
 	if len(*ee) == 0 {
-		return &(*ee)[0]
+		return nil, false
 	}
-	return &(*ee)[len(*ee)-1]
+	return &(*ee)[len(*ee)-1], true
 }
