@@ -9,7 +9,7 @@ type Element struct {
 	SubElements []string
 }
 
-// DString returns a string of the element.
+// String returns a string of the element.
 func (e *Element) String() string {
 	return e.DString(DefaultDelimiters)
 }
