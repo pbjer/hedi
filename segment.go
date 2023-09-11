@@ -1,6 +1,8 @@
 package hedi
 
-import "strings"
+import (
+	"strings"
+)
 
 type Segment struct {
 	ID       string
@@ -27,19 +29,15 @@ func (s *Segment) DString(delimiters Delimiters) string {
 	return sb.String()
 }
 
-func (s *Segment) GetElement(index int) Element {
+func (s *Segment) GetElement(index int) (Element, bool) {
 	if len(s.Elements) <= index {
-		return Element{}
+		return Element{}, false
 	}
-	return s.Elements[index]
+	return s.Elements[index], true
 }
 
-func (s *Segment) AddElement(element Element) *Segment {
-	if s.Elements == nil {
-		s.Elements = []Element{}
-	}
-	s.Elements = append(s.Elements, element)
-	return s
+func (s *Segment) AddElement(element Element) {
+	s.SetElement(len(s.Elements), element)
 }
 
 // SetElement assigns the provided element at the specified
@@ -54,6 +52,9 @@ func (s *Segment) SetElement(index int, element Element) {
 	delta := 0
 	if len(s.Elements) <= index {
 		delta = index - len(s.Elements)
+		if delta == 0 {
+			delta = 1
+		}
 		s.Elements = append(s.Elements, make([]Element, delta)...)
 	}
 	s.Elements[index] = element

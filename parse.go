@@ -12,9 +12,9 @@ func NewParser(reader io.Reader) *Parser {
 	}
 }
 
-func (p *Parser) Parse() (Segments, error) {
+func (p *Parser) Segments() (Segments, error) {
 	lexer := NewLexer(p.reader)
-	tokens, err := lexer.Lex()
+	tokens, err := lexer.Tokens()
 	if err != nil {
 		return nil, err
 	}

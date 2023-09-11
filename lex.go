@@ -7,6 +7,10 @@ import (
 	"strings"
 )
 
+var (
+	ErrInvalidISALength = errors.New("invalid ISA length")
+)
+
 type Lexer struct {
 	reader io.Reader
 }
@@ -17,30 +21,30 @@ func NewLexer(reader io.Reader) *Lexer {
 	}
 }
 
-// Lex returns a slice of tokens for the given input. It expects
+// Tokens returns a slice of tokens from the reader. It expects
 // input of at least the length of a valid ISA segment (106 bytes),
 // or it will error. Accuracy of the returned token types is
 // dependent on the ISA.
-func (l *Lexer) Lex() (Tokens, error) {
-	isaTokens, separators, err := LexISA(l.reader)
+func (l *Lexer) Tokens() (Tokens, error) {
+	isaTokens, separators, err := lexISA(l.reader)
 	if err != nil {
 		return Tokens{}, err
 	}
-	return append(isaTokens, LexSegments(l.reader, separators)...), nil
+	return append(isaTokens, lexSegments(l.reader, separators)...), nil
 }
 
-// LexISA returns a slice of tokens and the defined separators
+// lexISA returns a slice of tokens and the defined separators
 // for the given input. It expects input of at least 106 bytes,
 // or it will error. It does not otherwise validate the ISA or
 // the returned tokens.
-func LexISA(reader io.Reader) (Tokens, Delimiters, error) {
+func lexISA(reader io.Reader) (Tokens, Delimiters, error) {
 	isaBuffer := make([]byte, 106)
 	n, err := reader.Read(isaBuffer)
 	if err != nil {
 		return Tokens{}, Delimiters{}, err
 	}
 	if n != 106 {
-		return Tokens{}, Delimiters{}, errors.New("invalid ISA length")
+		return Tokens{}, Delimiters{}, ErrInvalidISALength
 	}
 
 	isaString := string(isaBuffer)
@@ -79,9 +83,9 @@ func LexISA(reader io.Reader) (Tokens, Delimiters, error) {
 	return tokens, *separators, nil
 }
 
-// LexSegments returns a slice of tokens based on the supplied
+// lexSegments returns a slice of tokens based on the supplied
 // separators.
-func LexSegments(reader io.Reader, separators Delimiters) Tokens {
+func lexSegments(reader io.Reader, separators Delimiters) Tokens {
 	var tokens Tokens
 
 	scanner := bufio.NewScanner(reader)
@@ -89,13 +93,13 @@ func LexSegments(reader io.Reader, separators Delimiters) Tokens {
 
 	for scanner.Scan() {
 		segment := scanner.Text()
-		tokens = append(tokens, LexSegment(strings.NewReader(segment), separators)...)
+		tokens = append(tokens, lexSegment(strings.NewReader(segment), separators)...)
 	}
 
 	return tokens
 }
 
-func LexSegment(reader io.Reader, separators Delimiters) Tokens {
+func lexSegment(reader io.Reader, separators Delimiters) Tokens {
 	var tokens Tokens
 
 	scanner := bufio.NewScanner(reader)
@@ -106,13 +110,13 @@ func LexSegment(reader io.Reader, separators Delimiters) Tokens {
 
 	for scanner.Scan() {
 		element := scanner.Text()
-		tokens = append(tokens, LexElement(strings.NewReader(element), separators)...)
+		tokens = append(tokens, lexElement(strings.NewReader(element), separators)...)
 	}
 
 	return append(tokens, Token{Type: SegmentTerminator, Value: string(separators.Segment)})
 }
 
-func LexElement(reader io.Reader, separators Delimiters) Tokens {
+func lexElement(reader io.Reader, separators Delimiters) Tokens {
 	var tokens Tokens
 
 	scanner := bufio.NewScanner(reader)

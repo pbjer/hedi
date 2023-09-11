@@ -1,7 +1,6 @@
 package hedi
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -13,7 +12,7 @@ func TestLexISA(t *testing.T) {
 		assert.NoError(t, err)
 		defer file.Close()
 
-		tokens, separators, err := LexISA(file)
+		tokens, separators, err := lexISA(file)
 		assert.NoError(t, err)
 		assert.Equal(t, 33, len(tokens))
 		assert.Equal(t, int32(10), separators.Segment)
@@ -25,7 +24,7 @@ func TestLexISA(t *testing.T) {
 		assert.NoError(t, err)
 		defer file.Close()
 
-		tokens, separators, err := LexISA(file)
+		tokens, separators, err := lexISA(file)
 		assert.NoError(t, err)
 		assert.Equal(t, 33, len(tokens))
 		assert.Equal(t, int32(126), separators.Segment)
@@ -37,11 +36,10 @@ func TestLexISA(t *testing.T) {
 func TestLex(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		file, err := os.Open("./test/850_with_tilde_segment_terminator.txt")
-		assert.NoError(t, err)
 		defer file.Close()
+		assert.NoError(t, err)
 		lexer := NewLexer(file)
-		tokens, err := lexer.Lex()
-		fmt.Print(tokens)
+		tokens, err := lexer.Tokens()
 		assert.NoError(t, err)
 		assert.Len(t, tokens, 503)
 	})
