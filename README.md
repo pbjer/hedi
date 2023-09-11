@@ -34,7 +34,7 @@ if err != nil {
 #### Stringer
 Hedi's EDI types implement the `String() string` stringer interface for simple string serialization.
 
-To override the default delimiters, you can use `DString(d hedi.Delimiters) string`, which stringer depends on under the hood.
+To override the default delimiters, you can use `DString(d hedi.Delimiters) string`, which Stringer depends on under the hood.
 ```go
 segments := hedi.Segments{{
   ID: "ST",
@@ -58,7 +58,7 @@ fmt.Println(segments.DString(delimiters))
 #### WriterTo
 Hedi's `Segments` EDI type implements the WriterTo interface for efficient string serialization to an `io.Writer`.
 
-To override the default delimiters, you can use `DWriteTo(d hedi.Delimiters, w io.Writer) (int64, error)`, which `WriteTo(w io.Writer) (int64, error)` depends on under the hood.
+To override the default delimiters, you can use `DWriteTo(d hedi.Delimiters, w io.Writer) (int64, error)`, which WriteTo depends on under the hood.
 ```go
 file, _ := os.Create("850.txt")
 if err != nil {
