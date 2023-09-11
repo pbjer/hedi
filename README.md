@@ -45,9 +45,10 @@ fmt.Println(segments)
 // ST*850*000000010~
 
 delimiters := hedi.Delimeters{
-	Segment: '\n',
-	Element: '|',
-	SubElement: '>',
+  Segment: '\n',
+  Element: '|',
+  SubElement: '>',
+}
 	
 fmt.Println(segments.DString(delimiters))
 // ST|850|000000010
