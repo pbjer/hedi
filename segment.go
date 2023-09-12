@@ -56,13 +56,9 @@ func (s *Segment) AddElement(element Element) {
 // SetElement replaces or appends an Element at the specified index in the Segment.
 // If the index exceeds the current size, the Elements slice is expanded.
 func (s *Segment) SetElement(index int, element Element) {
-	delta := 0
-	if len(s.Elements) <= index {
-		delta = index - len(s.Elements)
-		if delta == 0 {
-			delta = 1
-		}
-		s.Elements = append(s.Elements, make([]Element, delta)...)
+	if index >= len(s.Elements) {
+		newElements := make([]Element, index+1-len(s.Elements))
+		s.Elements = append(s.Elements, newElements...)
 	}
 	s.Elements[index] = element
 }
