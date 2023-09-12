@@ -6,21 +6,26 @@ import (
 )
 
 var (
+	// ErrSegmentIdentifierExpected is returned when a segment identifier is expected but not found.
 	ErrSegmentIdentifierExpected = errors.New("segment identifier expected")
-	ErrElementExpected           = errors.New("element expected")
+	// ErrElementExpected is returned when an element is expected but not found.
+	ErrElementExpected = errors.New("element expected")
 )
 
+// Parser encapsulates the parsing logic for EDI files.
 type Parser struct {
 	reader io.Reader
 }
 
+// NewParser creates a new Parser instance with the given io.Reader.
 func NewParser(reader io.Reader) *Parser {
 	return &Parser{
 		reader: reader,
 	}
 }
 
-// Segments parses Segments from the underlying reader.
+// Segments reads from the underlying reader and converts the token stream into Segments.
+// It returns an error if the token stream does not conform to the expected structure.
 func (p *Parser) Segments() (Segments, error) {
 	lexer := NewLexer(p.reader)
 	tokens, err := lexer.Tokens()
