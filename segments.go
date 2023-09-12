@@ -7,15 +7,15 @@ import (
 	"strings"
 )
 
+// Segments is a slice of Segment types.
 type Segments []Segment
 
-// String satisfied the fmt.Stringer interface. Depends on DString under
-// the hood.
+// String satisfies the fmt.Stringer interface, delegating to DString.
 func (s *Segments) String() string {
 	return s.DString(DefaultDelimiters)
 }
 
-// DString returns a string of the segments formatted using the provided delimiters.
+// DString constructs a string representation of Segments using provided delimiters.
 func (s *Segments) DString(delimiters Delimiters) string {
 	var sb strings.Builder
 	for _, segment := range *s {
@@ -24,14 +24,13 @@ func (s *Segments) DString(delimiters Delimiters) string {
 	return sb.String()
 }
 
-// WriteTo satisfies the io.WriterTo interface. Depends on DWriteTo under
-// the hood.
+// WriteTo satisfies the io.WriterTo interface, delegating to DWriteTo.
 func (s *Segments) WriteTo(w io.Writer) (int64, error) {
 	return s.DWriteTo(DefaultDelimiters, w)
 }
 
-// DWriteTo uses a buffered writer to write Segments to w, formatted using the
-// provided delimiters.
+// DWriteTo writes the Segments to an io.Writer w, formatted with specified delimiters.
+// Returns the number of bytes written and any error encountered.
 func (s *Segments) DWriteTo(d Delimiters, w io.Writer) (int64, error) {
 	var total int64
 	bufferedWriter := bufio.NewWriter(w)
@@ -74,9 +73,8 @@ func (s *Segments) DWriteTo(d Delimiters, w io.Writer) (int64, error) {
 	return total, nil
 }
 
-// Last returns a pointer to the last segment in the list.
-// The second return value will be true if an Element is
-// found, otherwise false.
+// Last returns a pointer to the last segment in the list, or nil if the list is empty.
+// The boolean return value indicates the presence of a last segment.
 func (s *Segments) Last() (*Segment, bool) {
 	if len(*s) == 0 {
 		return nil, false
