@@ -8,23 +8,25 @@ import (
 )
 
 var (
+	// ErrInvalidISALength represents an error for invalid ISA segment length.
 	ErrInvalidISALength = errors.New("invalid ISA length")
 )
 
+// Lexer wraps an io.Reader for lexing EDI files.
 type Lexer struct {
 	reader io.Reader
 }
 
+// NewLexer initializes a new Lexer with a given io.Reader.
 func NewLexer(reader io.Reader) *Lexer {
 	return &Lexer{
 		reader: reader,
 	}
 }
 
-// Tokens returns a slice of tokens from the reader. It expects
-// input of at least the length of a valid ISA segment (106 bytes),
-// or it will error. Accuracy of the returned token types is
-// dependent on the ISA.
+// Tokens lexes the input and returns a slice of Token structs.
+// It expects an input that starts with a valid ISA segment of 106 bytes.
+// Returns an error if the input does not meet the criteria.
 func (l *Lexer) Tokens() ([]Token, error) {
 	isaTokens, separators, err := lexISA(l.reader)
 	if err != nil {
@@ -33,6 +35,7 @@ func (l *Lexer) Tokens() ([]Token, error) {
 	return append(isaTokens, lexSegments(l.reader, separators)...), nil
 }
 
+// lexISA tokenizes the ISA segment and returns the identified delimiters.
 func lexISA(reader io.Reader) ([]Token, Delimiters, error) {
 	isaBuffer := make([]byte, 106)
 	n, err := reader.Read(isaBuffer)
@@ -79,6 +82,7 @@ func lexISA(reader io.Reader) ([]Token, Delimiters, error) {
 	return tokens, *separators, nil
 }
 
+// lexSegments tokenizes all subsequent segments in the EDI file using the delimiters identified in the ISA segment.
 func lexSegments(reader io.Reader, separators Delimiters) []Token {
 	var tokens []Token
 
@@ -93,6 +97,7 @@ func lexSegments(reader io.Reader, separators Delimiters) []Token {
 	return tokens
 }
 
+// lexSegment tokenizes a single segment using the provided delimiters.
 func lexSegment(reader io.Reader, separators Delimiters) []Token {
 	var tokens []Token
 
@@ -110,6 +115,7 @@ func lexSegment(reader io.Reader, separators Delimiters) []Token {
 	return append(tokens, Token{Type: SegmentTerminator, Value: string(separators.Segment)})
 }
 
+// lexElement tokenizes an element and its sub-elements, if any, using the provided delimiters.
 func lexElement(reader io.Reader, separators Delimiters) []Token {
 	var tokens []Token
 
