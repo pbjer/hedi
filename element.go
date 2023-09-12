@@ -21,7 +21,6 @@ func (e *Element) String() string {
 func (e *Element) DString(delimiters Delimiters) string {
 	var sb strings.Builder
 
-	sb.WriteRune(delimiters.Element)
 	sb.WriteString(e.Value)
 	for _, subElement := range e.SubElements {
 		sb.WriteRune(delimiters.SubElement)

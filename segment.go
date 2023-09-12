@@ -29,6 +29,7 @@ func (s *Segment) DString(delimiters Delimiters) string {
 
 	// Append each Element's string representation
 	for _, element := range s.Elements {
+		sb.WriteString(string(delimiters.Element))
 		sb.WriteString(element.DString(delimiters))
 	}
 

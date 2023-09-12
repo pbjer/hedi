@@ -4,7 +4,7 @@ package hedi
 var DefaultDelimiters = Delimiters{
 	Segment:    '~',
 	Element:    '*',
-	SubElement: '~',
+	SubElement: '>',
 }
 
 // Delimiters contains the delimiters used for splitting segments, elements,
