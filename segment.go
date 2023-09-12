@@ -4,36 +4,42 @@ import (
 	"strings"
 )
 
+// Segment represents an EDI segment, which consists of an ID and a list of Elements.
 type Segment struct {
 	ID       string
 	Elements Elements
 }
 
+// NewSegment constructs a new Segment with the given ID.
 func NewSegment(id string) *Segment {
 	return &Segment{ID: id}
 }
 
-// String returns a string of the segment.
+// String converts the Segment to its EDI string representation using default delimiters.
 func (s *Segment) String() string {
 	return s.DString(DefaultDelimiters)
 }
 
-// DString returns a string of the segment formatted using the provided delimiters.
+// DString converts the Segment to its EDI string representation using the provided delimiters.
 func (s *Segment) DString(delimiters Delimiters) string {
 	var sb strings.Builder
 
+	// Append Segment ID
 	sb.WriteString(s.ID)
+
+	// Append each Element's string representation
 	for _, element := range s.Elements {
 		sb.WriteString(element.DString(delimiters))
 	}
+
+	// Append Segment delimiter
 	sb.WriteRune(delimiters.Segment)
 
 	return sb.String()
 }
 
-// GetElement returns the element at the specified index.
-// The second return value will be true if an Element is
-// found, otherwise false.
+// GetElement retrieves the Element at the specified index within the Segment.
+// Returns the Element and a boolean indicating whether the Element was found.
 func (s *Segment) GetElement(index int) (Element, bool) {
 	if len(s.Elements) <= index {
 		return Element{}, false
@@ -41,15 +47,13 @@ func (s *Segment) GetElement(index int) (Element, bool) {
 	return s.Elements[index], true
 }
 
-// AddElement adds an element at the end of the current segment.
+// AddElement appends an Element to the end of the Segment.
 func (s *Segment) AddElement(element Element) {
 	s.SetElement(len(s.Elements), element)
 }
 
-// SetElement assigns the provided element at the specified
-// index in the Segment. If the index is out of the current
-// range, the Elements slice is dynamically expanded to
-// accommodate the new element.
+// SetElement replaces or appends an Element at the specified index in the Segment.
+// If the index exceeds the current size, the Elements slice is expanded.
 func (s *Segment) SetElement(index int, element Element) {
 	delta := 0
 	if len(s.Elements) <= index {
