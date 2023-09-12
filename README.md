@@ -1,4 +1,4 @@
-![Go Test](https://github.com/pbjer/hedi/actions/workflows/main.yml/badge.svg)
+![Go Test](https://github.com/pbjer/hedi/actions/workflows/main.yml/badge.svg?branch=main&kill_cache=1)
 [![Coverage Status](https://coveralls.io/repos/github/pbjer/hedi/badge.svg?branch=main)](https://coveralls.io/github/pbjer/hedi?branch=main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
