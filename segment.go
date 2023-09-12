@@ -16,12 +16,12 @@ func NewSegment(id string) *Segment {
 }
 
 // String converts the Segment to its EDI string representation using default delimiters.
-func (s *Segment) String() string {
+func (s Segment) String() string {
 	return s.DString(DefaultDelimiters)
 }
 
 // DString converts the Segment to its EDI string representation using the provided delimiters.
-func (s *Segment) DString(delimiters Delimiters) string {
+func (s Segment) DString(delimiters Delimiters) string {
 	var sb strings.Builder
 
 	// Append Segment ID
@@ -41,7 +41,7 @@ func (s *Segment) DString(delimiters Delimiters) string {
 
 // GetElement retrieves the Element at the specified index within the Segment.
 // Returns the Element and a boolean indicating whether the Element was found.
-func (s *Segment) GetElement(index int) (Element, bool) {
+func (s Segment) GetElement(index int) (Element, bool) {
 	if len(s.Elements) <= index {
 		return Element{}, false
 	}

@@ -12,13 +12,13 @@ type Element struct {
 
 // String returns the default delimited string representation of the Element.
 // It uses the DefaultDelimiters for formatting.
-func (e *Element) String() string {
+func (e Element) String() string {
 	return e.DString(DefaultDelimiters)
 }
 
 // DString returns a delimited string representation of the Element.
 // It formats the Element's value and sub-elements using the provided Delimiters.
-func (e *Element) DString(delimiters Delimiters) string {
+func (e Element) DString(delimiters Delimiters) string {
 	var sb strings.Builder
 
 	sb.WriteString(e.Value)
@@ -44,9 +44,9 @@ type Elements []Element
 
 // Last returns the last Element in the Elements slice.
 // Returns nil and false if the Elements slice is empty.
-func (ee *Elements) Last() (*Element, bool) {
-	if len(*ee) == 0 {
+func (ee Elements) Last() (*Element, bool) {
+	if len(ee) == 0 {
 		return nil, false
 	}
-	return &(*ee)[len(*ee)-1], true
+	return &(ee)[len(ee)-1], true
 }

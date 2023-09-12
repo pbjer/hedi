@@ -11,7 +11,7 @@ import (
 type Segments []Segment
 
 // String satisfies the fmt.Stringer interface, delegating to DString.
-func (s *Segments) String() string {
+func (s Segments) String() string {
 	return s.DString(DefaultDelimiters)
 }
 
