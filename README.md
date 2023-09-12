@@ -4,6 +4,7 @@ Hedi is a library for interacting with Electronic Data Interchange (EDI) message
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Tests](https://github.com/pbjer/hedi/actions/workflows/main.yml/badge.svg?branch=main&kill_cache=1)
+[![PkgGoDev](https://pkg.go.dev/badge/mod/github.com/pbjer/hedi)](https://pkg.go.dev/mod/github.com/pbjer/hedi)
 ___
 
 ## Installation
