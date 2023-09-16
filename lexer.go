@@ -62,13 +62,13 @@ func lexISA(reader io.Reader) ([]Token, Delimiters, error) {
 	// Split the segment into its identifier and elements
 	segmentParts := strings.Split(isaString, string(separators.Element))
 
-	// Record segment identifier and consumed delimiter tokens
+	// Record segment identifier and consumed delimiter token
 	tokens = append(tokens,
 		Token{Type: SegmentIdentifier, Value: segmentParts[0]},
 		Token{Type: ElementDelimiter, Value: string(separators.Element)},
 	)
 
-	// Record each element in the segment, starting after the identifier, ending before the segment terminator
+	// Record each element in the segment, starting after the identifier, ending before the sub element delimiter value
 	for i, part := range segmentParts[1 : len(segmentParts)-1] {
 		tokens = append(tokens, Token{Type: ElementValue, Value: part})
 		if i < len(segmentParts)-2 { // Add consumed delimiter if not the last element
@@ -76,8 +76,11 @@ func lexISA(reader io.Reader) ([]Token, Delimiters, error) {
 		}
 	}
 
-	// Record the segment terminator
-	tokens = append(tokens, Token{Type: SegmentTerminator, Value: string(separators.Segment)})
+	// Record the sub element delimiter value and segment terminator
+	tokens = append(tokens,
+		Token{Type: ElementValue, Value: string(separators.SubElement)},
+		Token{Type: SegmentTerminator, Value: string(separators.Segment)},
+	)
 
 	return tokens, *separators, nil
 }

@@ -15,7 +15,7 @@ func TestLexISA(t *testing.T) {
 
 		tokens, separators, err := lexISA(file)
 		assert.NoError(t, err)
-		assert.Equal(t, 33, len(tokens))
+		assert.Equal(t, 34, len(tokens))
 		assert.Equal(t, int32(10), separators.Segment)
 		assert.Equal(t, int32(42), separators.Element)
 		assert.Equal(t, int32(62), separators.SubElement)
@@ -27,7 +27,7 @@ func TestLexISA(t *testing.T) {
 
 		tokens, separators, err := lexISA(file)
 		assert.NoError(t, err)
-		assert.Equal(t, 33, len(tokens))
+		assert.Equal(t, 34, len(tokens))
 		assert.Equal(t, int32(126), separators.Segment)
 		assert.Equal(t, int32(42), separators.Element)
 		assert.Equal(t, int32(62), separators.SubElement)
@@ -42,7 +42,7 @@ func TestLexer_Tokens(t *testing.T) {
 		lexer := NewLexer(file)
 		tokens, err := lexer.Tokens()
 		assert.NoError(t, err)
-		assert.Len(t, tokens, 503)
+		assert.Len(t, tokens, 504)
 	})
 	tests := []struct {
 		name    string
@@ -54,7 +54,7 @@ func TestLexer_Tokens(t *testing.T) {
 			name:    "ValidInput",
 			input:   "ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *190430*1230*U*00401*000000000*0*T*|\n",
 			wantErr: nil,
-			len:     33,
+			len:     34,
 		},
 		{
 			name:    "InvalidISALength",
